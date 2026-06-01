@@ -105,7 +105,11 @@ def get_benchmark(name: str, config: Optional['TaskConfig'] = None) -> 'DataAdap
 
     # Update metadata with dataset-specific configuration
     if config is not None:
-        metadata._update(config.dataset_args.get(name, {}))
+        dataset_args = config.dataset_args or {}
+        if name in dataset_args:
+            metadata._update(dataset_args[name])
+        elif len(config.datasets) == 1:
+            metadata._update(dataset_args)
     # Return the data adapter initialized with the benchmark metadata
     data_adapter_cls = metadata.data_adapter
     return data_adapter_cls(benchmark_meta=metadata, task_config=config)

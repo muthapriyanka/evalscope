@@ -176,6 +176,12 @@ class BenchmarkMeta:
             self._update_extra_params(args['extra_params'])
             del args['extra_params']
 
+        direct_extra_params = {key: value for key, value in args.items() if key in self.extra_params}
+        if direct_extra_params:
+            self._update_extra_params(direct_extra_params)
+            for key in direct_extra_params:
+                del args[key]
+
         # Update fields with validation
         for key, value in args.items():
             if hasattr(self, key):

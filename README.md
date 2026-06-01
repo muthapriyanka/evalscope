@@ -20,6 +20,32 @@
 <a href="https://evalscope.readthedocs.io/zh-cn/latest/"> 📖  中文文档</a> &nbsp ｜ &nbsp <a href="https://evalscope.readthedocs.io/en/latest/"> 📖  English Documentation</a>
 <p>
 
+## AI Model Quality Challenge Extension
+
+Base EvalScope commit developed against: `a1e29606eea4d176deacc57e67aed411a898a2bc`.
+
+This fork adds deterministic pruned benchmark aliases for the Cerebras AI Engineer model-quality task:
+
+- `live_code_bench_pruned`: LiveCodeBench v5 compression using `calibrated_coverage`.
+- `aa_lcr_pruned`: AA-LCR compression using `calibrated_coverage`.
+- `mmmu_pruned`: forward-looking MMMU image-encoder probe using `image_encoder_probe`.
+
+Run from a clean clone:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+
+evalscope eval --model <model> --datasets live_code_bench --output ./results_full/
+evalscope eval --model <model> --datasets live_code_bench_pruned \
+    --dataset-args '{"pruning_strategy": "calibrated_coverage", "prune_ratio": 0.1}' \
+    --output ./results_pruned/
+python -m evalscope_ext.tools.compare_runs --full ./results_full/ --pruned ./results_pruned/
+```
+
+The same pattern works for `aa_lcr_pruned`; `mmmu_pruned` defaults to `image_encoder_probe`.
+
 
 > ⭐ If you like this project, please click the "Star" button in the upper right corner to support us. Your support is our motivation to move forward!
 
