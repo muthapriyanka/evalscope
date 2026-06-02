@@ -19,6 +19,7 @@ python -m evalscope_ext.tools.compare_runs --full ./results_full/ --pruned ./res
 ```
 
 Use `aa_lcr_pruned` the same way for long-context reasoning. Use `mmmu_pruned` when a prospect asks about multimodal readiness.
+All three pruned datasets are registered inside EvalScope and use the same pruning adapter path.
 
 ## How To Interpret
 

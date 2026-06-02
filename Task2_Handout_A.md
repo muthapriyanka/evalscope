@@ -12,6 +12,10 @@ I implemented the pruner inside an EvalScope fork as first-class benchmark alias
 - `aa_lcr_pruned`
 - `mmmu_pruned`
 
+The aliases share a reusable pruning adapter mixin and metadata builder, so the extension
+is not a one-off wrapper for LiveCodeBench. AA-LCR and MMMU register through the same
+EvalScope pattern and call the same pruning selector.
+
 The core strategy is `calibrated_coverage`. It uses the shipped reference reviews only to learn sample behavior patterns, not to pick top-k easy or hard cases. For each sample, the three reference model outcomes form a behavior pattern such as `(pass, fail, pass)`. The pruner allocates the reduced set so these behavior-pattern marginals match the full benchmark as closely as possible, then chooses samples within each behavior bucket to maximize metadata coverage. For unseen dataset revisions, it falls back to deterministic metadata coverage.
 
 At `prune_ratio=0.1`:
@@ -30,7 +34,7 @@ AA-LCR is noisier because the metric is LLM-judge accuracy and the pruned set is
 
 ## Part B: Multimodal Probe
 
-For MMMU, I added `mmmu_pruned` as an image-encoder stress probe. The point is not generic MMMU ability; it is to surface encoder degradation cheaply. The strategy favors:
+For MMMU, I added working `mmmu_pruned` code as an image-encoder stress probe. The point is not generic MMMU ability; it is to surface encoder degradation cheaply. The strategy favors:
 
 - OCR-dense tables, charts, sheet music, and document images.
 - Diagrams, maps, chemical structures, and geometry-like images.

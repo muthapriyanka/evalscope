@@ -1,4 +1,5 @@
 from evalscope.api.registry import get_benchmark
+from evalscope.benchmarks._pruning import PrunedBenchmarkMixin
 from evalscope.config import TaskConfig
 
 
@@ -34,3 +35,16 @@ def test_nested_dataset_args_still_work() -> None:
 
     assert benchmark.extra_params['prune_ratio'] == 0.15
     assert benchmark.extra_params['prune_seed'] == 99
+
+
+def test_pruned_benchmarks_use_shared_adapter_mixin() -> None:
+    for dataset_name in ['live_code_bench_pruned', 'aa_lcr_pruned', 'mmmu_pruned']:
+        benchmark = get_benchmark(dataset_name, TaskConfig(datasets=[dataset_name]))
+
+        assert isinstance(benchmark, PrunedBenchmarkMixin)
+
+
+def test_mmmu_pruned_defaults_to_image_encoder_probe() -> None:
+    benchmark = get_benchmark('mmmu_pruned', TaskConfig(datasets=['mmmu_pruned']))
+
+    assert benchmark.extra_params['pruning_strategy'] == 'image_encoder_probe'

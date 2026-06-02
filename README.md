@@ -30,6 +30,11 @@ This fork adds deterministic pruned benchmark aliases for the Cerebras AI Engine
 - `aa_lcr_pruned`: AA-LCR compression using `calibrated_coverage`.
 - `mmmu_pruned`: forward-looking MMMU image-encoder probe using `image_encoder_probe`.
 
+All three aliases use the same reusable `PrunedBenchmarkMixin` and `build_pruned_meta`
+helper under `evalscope/benchmarks/_pruning/`, so the pruning integration is benchmark
+agnostic. The benchmark-specific adapters only register each pruned alias and choose the
+default strategy.
+
 Run from a clean clone:
 
 ```bash
